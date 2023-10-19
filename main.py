@@ -59,7 +59,7 @@ class CameraShake(QMainWindow):
         return num_frames
     
     def camera_frequency_update(self):
-        value = self.frequency_slider.value()
+        value = self.frequency_slider.value() / 1000
 
         for frame in range(self.num_frames):
             random_translation = [random.uniform(-value, value), random.uniform(-value, value), random.uniform(-value, value)]
