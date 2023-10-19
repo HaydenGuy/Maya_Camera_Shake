@@ -10,10 +10,10 @@ class CameraShake(QMainWindow):
         super().__init__()
         self.setupUI()
 
-        self.frequency_x_slider.valueChanged.connect(self.camera_frequency_update)
-        self.frequency_y_slider.valueChanged.connect(self.camera_frequency_update)
-        self.frequency_z_slider.valueChanged.connect(self.camera_frequency_update)
-        self.amplitude_slider.valueChanged.connect(self.camera_amplitude_update)
+        self.frequency_x_slider.valueChanged.connect(self.camera_shake_update)
+        self.frequency_y_slider.valueChanged.connect(self.camera_shake_update)
+        self.frequency_z_slider.valueChanged.connect(self.camera_shake_update)
+        self.amplitude_slider.valueChanged.connect(self.camera_shake_update)
 
         self.selected_cameras = self.get_selected_cameras()
         self.num_frames = self.get_max_frame_number()
@@ -75,24 +75,20 @@ class CameraShake(QMainWindow):
 
         return num_frames
     
-    def camera_frequency_update(self):
-        value_x = self.frequency_x_slider.value() / 1000
-        value_y = self.frequency_y_slider.value() / 1000
-        value_z = self.frequency_z_slider.value() / 1000
+    def camera_shake_update(self):
+        value_x = self.frequency_x_slider.value() / 100
+        value_y = self.frequency_y_slider.value() / 100
+        value_z = self.frequency_z_slider.value() / 100
 
         for frame in range(self.num_frames):
-            random_x = random.uniform(-value_x, value_x)
-            random_y = random.uniform(-value_y, value_y)
-            random_z = random.uniform(-value_z, value_z)
+            random_x = random.uniform(-value_x, value_x) * self.amplitude_slider.value()
+            random_y = random.uniform(-value_y, value_y) * self.amplitude_slider.value()
+            random_z = random.uniform(-value_z, value_z) * self.amplitude_slider.value()
             
             for camera in self.selected_cameras:
                 cmds.setKeyframe(camera, attribute="translateX", t=frame, value=random_x)
                 cmds.setKeyframe(camera, attribute="translateY", t=frame, value=random_y)
                 cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=random_z)
-
-    def camera_amplitude_update(self):
-        print("placeholder")
-
 
 if __name__ == '__main__':
     app = QApplication.instance()
