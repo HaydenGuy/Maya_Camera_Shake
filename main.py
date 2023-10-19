@@ -10,7 +10,9 @@ class CameraShake(QMainWindow):
         super().__init__()
         self.setupUI()
 
-        self.frequency_slider.valueChanged.connect(self.camera_frequency_update)
+        self.frequency_x_slider.valueChanged.connect(self.camera_frequency_update)
+        self.frequency_y_slider.valueChanged.connect(self.camera_frequency_update)
+        self.frequency_z_slider.valueChanged.connect(self.camera_frequency_update)
         self.amplitude_slider.valueChanged.connect(self.camera_amplitude_update)
 
         self.selected_cameras = self.get_selected_cameras()
@@ -24,17 +26,32 @@ class CameraShake(QMainWindow):
         main_layout = QHBoxLayout(central_widget)
 
         lb_layout = QVBoxLayout()
-        lb_frequency = QLabel("Frequency: ")
+
+        lb_frequency_x = QLabel("Frequency X: ")
+        lb_frequency_y = QLabel("Frequency Y: ")
+        lb_frequency_z = QLabel("Frequency Z: ")
         lb_amplitude = QLabel("Amplitude: ")
-        lb_layout.addWidget(lb_frequency)
+
+        lb_layout.addWidget(lb_frequency_x)
+        lb_layout.addWidget(lb_frequency_y)
+        lb_layout.addWidget(lb_frequency_z)
         lb_layout.addWidget(lb_amplitude)
 
         slider_layout = QVBoxLayout()
-        self.frequency_slider = QSlider(Qt.Horizontal)
+
+        self.frequency_x_slider = QSlider(Qt.Horizontal)
+        self.frequency_y_slider = QSlider(Qt.Horizontal)
+        self.frequency_z_slider = QSlider(Qt.Horizontal)
         self.amplitude_slider = QSlider(Qt.Horizontal)
-        self.frequency_slider.setRange(0, 10)
-        self.amplitude_slider.setRange(0, 10)
-        slider_layout.addWidget(self.frequency_slider)
+
+        self.frequency_x_slider.setRange(0, 10)
+        self.frequency_y_slider.setRange(0, 10)
+        self.frequency_z_slider.setRange(0, 10)
+        self.amplitude_slider.setRange(1, 10)
+
+        slider_layout.addWidget(self.frequency_x_slider)
+        slider_layout.addWidget(self.frequency_y_slider)
+        slider_layout.addWidget(self.frequency_z_slider)
         slider_layout.addWidget(self.amplitude_slider)
 
         main_layout.addLayout(lb_layout)
@@ -59,15 +76,19 @@ class CameraShake(QMainWindow):
         return num_frames
     
     def camera_frequency_update(self):
-        value = self.frequency_slider.value() / 1000
+        value_x = self.frequency_x_slider.value() / 1000
+        value_y = self.frequency_y_slider.value() / 1000
+        value_z = self.frequency_z_slider.value() / 1000
 
         for frame in range(self.num_frames):
-            random_translation = [random.uniform(-value, value), random.uniform(-value, value), random.uniform(-value, value)]
-
+            random_x = random.uniform(-value_x, value_x)
+            random_y = random.uniform(-value_y, value_y)
+            random_z = random.uniform(-value_z, value_z)
+            
             for camera in self.selected_cameras:
-                cmds.setKeyframe(camera, attribute="translateX", t=frame, value=random_translation[0])
-                cmds.setKeyframe(camera, attribute="translateY", t=frame, value=random_translation[1])
-                cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=random_translation[2])
+                cmds.setKeyframe(camera, attribute="translateX", t=frame, value=random_x)
+                cmds.setKeyframe(camera, attribute="translateY", t=frame, value=random_y)
+                cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=random_z)
 
     def camera_amplitude_update(self):
         print("placeholder")
