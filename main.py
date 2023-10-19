@@ -11,6 +11,8 @@ class CameraShake(QMainWindow):
         self.frequency_slider.valueChanged.connect(self.camera_frequency_update)
         self.amplitude_slider.valueChanged.connect(self.camera_amplitude_update)
 
+        self.selected_cameras = self.get_selected_cameras()
+
     # Creates the UI 
     def setupUI(self):
         central_widget = QWidget()
@@ -34,6 +36,17 @@ class CameraShake(QMainWindow):
 
         main_layout.addLayout(lb_layout)
         main_layout.addLayout(slider_layout)
+
+    # Returns a list of the selected cameraShapes in the scene
+    def get_selected_cameras(self):
+        default_cameras = ('perspShape', 'topShape', 'frontShape', 'sideShape')
+        
+        selected_objects = cmds.ls(selection=True, dag=True)
+        all_cameras = cmds.ls(type="camera")
+
+        selected_cameras = [cam for cam in all_cameras if cam in selected_objects and cam not in default_cameras]
+        
+        return selected_cameras
 
     # Gets the number of frames in the scene and returns its value as an integer
     def get_max_frame_number(self):
