@@ -8,6 +8,9 @@ class CameraShake(QMainWindow):
         super().__init__()
         self.setupUI()
 
+        self.frequency_slider.valueChanged.connect(self.camera_frequency_update)
+        self.amplitude_slider.valueChanged.connect(self.camera_amplitude_update)
+
     def setupUI(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -21,15 +24,22 @@ class CameraShake(QMainWindow):
         lb_layout.addWidget(lb_amplitude)
 
         slider_layout = QVBoxLayout()
-        frequency_slider = QSlider(Qt.Horizontal)
-        amplitude_slider = QSlider(Qt.Horizontal)
-        frequency_slider.setRange(0, 10)
-        amplitude_slider.setRange(0, 10)
-        slider_layout.addWidget(frequency_slider)
-        slider_layout.addWidget(amplitude_slider)
+        self.frequency_slider = QSlider(Qt.Horizontal)
+        self.amplitude_slider = QSlider(Qt.Horizontal)
+        self.frequency_slider.setRange(0, 10)
+        self.amplitude_slider.setRange(0, 10)
+        slider_layout.addWidget(self.frequency_slider)
+        slider_layout.addWidget(self.amplitude_slider)
 
         main_layout.addLayout(lb_layout)
         main_layout.addLayout(slider_layout)
+
+    def camera_frequency_update(self):
+        print("placeholder")
+
+    def camera_amplitude_update(self):
+        print("placeholder")
+
 
 if __name__ == '__main__':
     app = QApplication.instance()
