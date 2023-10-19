@@ -6,9 +6,9 @@ from PySide2.QtCore import Qt
 class CameraShake(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.create_ui()
+        self.setupUI()
 
-    def create_ui(self):
+    def setupUI(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
@@ -36,6 +36,5 @@ if __name__ == '__main__':
     if not app:
         app = QApplication()
     
-    # Create and show the UI window
     window = CameraShake()
     window.show()
