@@ -11,6 +11,7 @@ class CameraShake(QMainWindow):
         self.frequency_slider.valueChanged.connect(self.camera_frequency_update)
         self.amplitude_slider.valueChanged.connect(self.camera_amplitude_update)
 
+    # Creates the UI 
     def setupUI(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -34,6 +35,12 @@ class CameraShake(QMainWindow):
         main_layout.addLayout(lb_layout)
         main_layout.addLayout(slider_layout)
 
+    # Gets the number of frames in the scene and returns its value as an integer
+    def get_max_frame_number(self):
+        self.frame_nums = int(cmds.playbackOptions(q=True, maxTime=True))
+
+        return self.frame_nums
+    
     def camera_frequency_update(self):
         print("placeholder")
 
