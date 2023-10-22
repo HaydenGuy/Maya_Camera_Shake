@@ -114,6 +114,16 @@ class CameraShake(QMainWindow):
                     cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=random_z)
 
     def reset_values(self):
+        self.frequency_x_slider.setValue(0)
+        self.frequency_y_slider.setValue(0)
+        self.frequency_z_slider.setValue(0)
+        self.amplitude_slider.setValue(0)
+        
+        self.frequency_x_slider.setSliderPosition(0)
+        self.frequency_y_slider.setSliderPosition(0)
+        self.frequency_z_slider.setSliderPosition(0)
+        self.amplitude_slider.setSliderPosition(1)
+        
         for frame in range (self.num_frames):
             for camera in self.selected_cameras:
                 cmds.cutKey(camera, attribute="translateX", t=(frame, frame))
