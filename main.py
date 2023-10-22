@@ -57,12 +57,17 @@ class CameraShake(QMainWindow):
         slider_layout.addWidget(self.frequency_z_slider)
         slider_layout.addWidget(self.amplitude_slider)
 
+        button_layout = QHBoxLayout()
+        
+        self.apply_button = QPushButton("Apply")
         self.reset_button = QPushButton("Reset")
+        button_layout.addWidget(self.apply_button)
+        button_layout.addWidget(self.reset_button)
 
         label_slider_layout.addLayout(lb_layout)
         label_slider_layout.addLayout(slider_layout)
         main_layout.addLayout(label_slider_layout)
-        main_layout.addWidget(self.reset_button)
+        main_layout.addLayout(button_layout)
 
     # Returns a list of the selected camera transforms in the scene
     def get_selected_cameras(self):
