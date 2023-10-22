@@ -117,7 +117,7 @@ class CameraShake(QMainWindow):
         self.frequency_x_slider.setValue(0)
         self.frequency_y_slider.setValue(0)
         self.frequency_z_slider.setValue(0)
-        self.amplitude_slider.setValue(0)
+        self.amplitude_slider.setValue(1)
         
         self.frequency_x_slider.setSliderPosition(0)
         self.frequency_y_slider.setSliderPosition(0)
