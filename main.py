@@ -10,11 +10,15 @@ class CameraShake(QMainWindow):
         super().__init__()
         self.setupUI()
 
-        self.frequency_x_slider.valueChanged.connect(self.camera_shake_update)
-        self.frequency_y_slider.valueChanged.connect(self.camera_shake_update)
-        self.frequency_z_slider.valueChanged.connect(self.camera_shake_update)
-        self.amplitude_slider.valueChanged.connect(self.camera_shake_update)
+        self.value_x = self.frequency_x_slider.value()
+        self.value_y = self.frequency_y_slider.value()
+        self.value_z = self.frequency_z_slider.value()
 
+        self.frequency_x_slider.valueChanged.connect(self.freq_slider_values_updated)
+        self.frequency_y_slider.valueChanged.connect(self.freq_slider_values_updated)
+        self.frequency_z_slider.valueChanged.connect(self.freq_slider_values_updated)
+
+        self.apply_button.clicked.connect(self.apply_values)
         self.reset_button.clicked.connect(self.reset_values)
 
         self.selected_cameras = self.get_selected_cameras()
@@ -87,15 +91,21 @@ class CameraShake(QMainWindow):
 
         return num_frames
     
-    def camera_shake_update(self):
-        value_x = self.frequency_x_slider.value() / 500
-        value_y = self.frequency_y_slider.value() / 500
-        value_z = self.frequency_z_slider.value() / 500
+    def freq_slider_values_updated(self):
+        self.value_x = self.frequency_x_slider.value() / 500
+        self.value_y = self.frequency_y_slider.value() / 500
+        self.value_z = self.frequency_z_slider.value() / 500
 
+    def random_translate_coordinate(self):
+        random_x = random.uniform(-self.value_x, self.value_x) * self.amplitude_slider.value()
+        random_y = random.uniform(-self.value_y, self.value_y) * self.amplitude_slider.value()
+        random_z = random.uniform(-self.value_z, self.value_z) * self.amplitude_slider.value()
+
+        return random_x, random_y, random_z
+    
+    def apply_values(self):        
         for frame in range(self.num_frames):
-            random_x = random.uniform(-value_x, value_x) * self.amplitude_slider.value()
-            random_y = random.uniform(-value_y, value_y) * self.amplitude_slider.value()
-            random_z = random.uniform(-value_z, value_z) * self.amplitude_slider.value()
+            random_x, random_y, random_z = self.random_translate_coordinate()
 
             if frame % 2 == 0:
                 for camera in self.selected_cameras:
