@@ -120,6 +120,12 @@ class CameraShake(QMainWindow):
         self.value_y = self.frequency_y_slider.value() / 500
         self.value_z = self.frequency_z_slider.value() / 500
 
+    # Returns the current translation values of the selected cameras as nested tuples in a list
+    def get_current_translate_values(self, camera):
+        translation_values = cmds.getAttr(camera + ".translate")[0]
+        
+        return translation_values
+
     # Generate random translation coordinates based on sliders
     def random_translate_coordinate(self):
         random_x = random.uniform(-self.value_x, self.value_x) * self.amplitude_slider.value()
@@ -128,10 +134,10 @@ class CameraShake(QMainWindow):
 
         return random_x, random_y, random_z
     
-
     # Apply camera shake by setting keyframes
-    def apply_values(self):        
+    def apply_values(self):
         for frame in range(self.num_frames):
+            current_x, current_y, current_z = self.get_current_translate_values()
             random_x, random_y, random_z = self.random_translate_coordinate()
 
             if frame % 2 == 0:
