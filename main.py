@@ -120,7 +120,7 @@ class CameraShake(QMainWindow):
         self.value_y = self.frequency_y_slider.value() / 500
         self.value_z = self.frequency_z_slider.value() / 500
 
-    # Returns the current translation values of the selected cameras as nested tuples in a list
+    # Returns the current translation values of the selected camera as a tuple
     def get_current_translate_values(self, camera):
         translation_values = cmds.getAttr(camera + ".translate")[0]
         
@@ -134,17 +134,26 @@ class CameraShake(QMainWindow):
 
         return random_x, random_y, random_z
     
-    # Apply camera shake by setting keyframes
+    # Gets the updated coordinates when random translate coordinates are added to current translate coordinates
+    def update_coordinates(self, camera):
+        current_x, current_y, current_z = self.get_current_translate_values(camera)
+        random_x, random_y, random_z = self.random_translate_coordinate()
+        update_x = current_x + random_x
+        update_y = current_y + random_y
+        update_z = current_z + random_z
+        
+        return update_x, update_y, update_z
+    
+    # Apply camera shake by setting keyframes on each camera over every frame
     def apply_values(self):
-        for frame in range(self.num_frames):
-            current_x, current_y, current_z = self.get_current_translate_values()
-            random_x, random_y, random_z = self.random_translate_coordinate()
+        for camera in self.selected_cameras:
+            for frame in range(self.num_frames):
+                update_x, update_y, update_z = self.update_coordinates(camera)
 
-            if frame % 2 == 0:
-                for camera in self.selected_cameras:
-                    cmds.setKeyframe(camera, attribute="translateX", t=frame, value=random_x)
-                    cmds.setKeyframe(camera, attribute="translateY", t=frame, value=random_y)
-                    cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=random_z)
+                if frame % 2 == 0:
+                    cmds.setKeyframe(camera, attribute="translateX", t=frame, value=update_x)
+                    cmds.setKeyframe(camera, attribute="translateY", t=frame, value=update_y)
+                    cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=update_z)
 
     # Reset slider positions/values and remove set keyframes
     def reset_values(self):
