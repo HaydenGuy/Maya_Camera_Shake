@@ -1,5 +1,4 @@
 import maya.cmds as cmds
-import maya.OpenMaya as om
 import random
 
 from PySide2.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSlider, QPushButton
