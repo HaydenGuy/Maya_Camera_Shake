@@ -148,6 +148,7 @@ class CameraShake(QMainWindow):
     def apply_values(self):
         for camera in self.selected_cameras:
             for frame in range(self.num_frames):
+                cmds.currentTime(frame, edit=True)
                 update_x, update_y, update_z = self.update_coordinates(camera)
 
                 if frame % 2 == 0:
