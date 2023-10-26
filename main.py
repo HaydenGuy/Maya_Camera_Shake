@@ -23,7 +23,8 @@ class CameraShake(QMainWindow):
         self.frequency_z_slider.valueChanged.connect(self.freq_slider_values_updated)
 
         # Connect button click signals to the apply/reset_values functions
-        self.apply_button.clicked.connect(self.apply_values)
+        self.set_keyframe.clicked.connect(self.apply_values)
+        self.set_keyframe_range.clicked.connect(self.apply_values)
         self.reset_button.clicked.connect(self.reset_values)
 
         # Get a list of selected cameras 
@@ -49,12 +50,14 @@ class CameraShake(QMainWindow):
         lb_frequency_y = QLabel("Frequency Y: ")
         lb_frequency_z = QLabel("Frequency Z: ")
         lb_amplitude = QLabel("Amplitude: ")
+        lb_keyframe_range = QLabel("Every Frame: ")
 
         # Add labels to the label layout
         lb_layout.addWidget(lb_frequency_x)
         lb_layout.addWidget(lb_frequency_y)
         lb_layout.addWidget(lb_frequency_z)
         lb_layout.addWidget(lb_amplitude)
+        lb_layout.addWidget(lb_keyframe_range)
 
         # Create slider layout and horizontal sliders
         slider_layout = QVBoxLayout()
@@ -62,6 +65,7 @@ class CameraShake(QMainWindow):
         self.frequency_y_slider = QSlider(Qt.Horizontal)
         self.frequency_z_slider = QSlider(Qt.Horizontal)
         self.amplitude_slider = QSlider(Qt.Horizontal)
+        self.keyframe_range_slider = QSlider(Qt.Horizontal)
 
         # Set the slider ranges
         self.frequency_x_slider.setRange(0, 10)
@@ -77,11 +81,13 @@ class CameraShake(QMainWindow):
 
         # Create a button layout and buttons
         button_layout = QHBoxLayout()
-        self.apply_button = QPushButton("Apply")
+        self.set_keyframe = QPushButton("Set Keyframe")
+        self.set_keyframe_range = QPushButton("Set Keyframe To Range")
         self.reset_button = QPushButton("Reset")
 
         # Add the buttons to the button layout
-        button_layout.addWidget(self.apply_button)
+        button_layout.addWidget(self.set_keyframe)
+        button_layout.addWidget(self.set_keyframe_range)
         button_layout.addWidget(self.reset_button)
 
         # Add the label and slider layouts to a label/slider layout
