@@ -25,7 +25,7 @@ class CameraShake(QMainWindow):
 
         # Connect button click signals to the apply/reset_values functions
         self.set_keyframe_button.clicked.connect(self.set_keyframe)
-        self.set_keyframe_range_button.clicked.connect(self.apply_values)
+        self.set_keyframe_range_button.clicked.connect(self.set_keyframe_to_range)
         self.reset_button.clicked.connect(self.reset_values)
 
         # Get a list of selected cameras 
@@ -168,18 +168,17 @@ class CameraShake(QMainWindow):
             cmds.setKeyframe(camera, attribute="translateY", t=current_frame, value=update_y)
             cmds.setKeyframe(camera, attribute="translateZ", t=current_frame, value=update_z)
     
-    # Apply camera shake by setting keyframes on each camera over every frame
-    def apply_values(self):
+    # Apply camera shake by setting keyframes on each camera over a frame range
+    def set_keyframe_to_range(self):
         frame_range = self.keyframe_range_slider.value()
         for camera in self.selected_cameras:
-            for frame in range(self.num_frames):
+            for frame in range(1, self.num_frames, frame_range):
                 cmds.currentTime(frame, edit=True)
                 update_x, update_y, update_z = self.update_coordinates(camera)
 
-                if frame % frame_range == 0:
-                    cmds.setKeyframe(camera, attribute="translateX", t=frame, value=update_x)
-                    cmds.setKeyframe(camera, attribute="translateY", t=frame, value=update_y)
-                    cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=update_z)
+                cmds.setKeyframe(camera, attribute="translateX", t=frame, value=update_x)
+                cmds.setKeyframe(camera, attribute="translateY", t=frame, value=update_y)
+                cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=update_z)
 
     # Reset slider positions/values and remove set keyframes
     def reset_values(self):
