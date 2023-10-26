@@ -24,8 +24,8 @@ class CameraShake(QMainWindow):
         self.keyframe_range_slider.valueChanged.connect(self.frame_range_slider_value_updated)
 
         # Connect button click signals to the apply/reset_values functions
-        self.set_keyframe.clicked.connect(self.apply_values)
-        self.set_keyframe_range.clicked.connect(self.apply_values)
+        self.set_keyframe_button.clicked.connect(self.set_keyframe)
+        self.set_keyframe_range_button.clicked.connect(self.apply_values)
         self.reset_button.clicked.connect(self.reset_values)
 
         # Get a list of selected cameras 
@@ -84,13 +84,13 @@ class CameraShake(QMainWindow):
 
         # Create a button layout and buttons
         button_layout = QHBoxLayout()
-        self.set_keyframe = QPushButton("Set Keyframe")
-        self.set_keyframe_range = QPushButton("Set Keyframes To Range")
+        self.set_keyframe_button = QPushButton("Set Keyframe")
+        self.set_keyframe_range_button = QPushButton("Set Keyframes To Range")
         self.reset_button = QPushButton("Reset")
 
         # Add the buttons to the button layout
-        button_layout.addWidget(self.set_keyframe)
-        button_layout.addWidget(self.set_keyframe_range)
+        button_layout.addWidget(self.set_keyframe_button)
+        button_layout.addWidget(self.set_keyframe_range_button)
         button_layout.addWidget(self.reset_button)
 
         # Add the label and slider layouts to a label/slider layout
@@ -157,15 +157,26 @@ class CameraShake(QMainWindow):
         update_z = current_z + random_z
         
         return update_x, update_y, update_z
+
+    # Apply camera shake to the current keyframe
+    def set_keyframe(self):
+        for camera in self.selected_cameras:
+            current_frame = cmds.currentTime(query=True)
+            update_x, update_y, update_z = self.update_coordinates(camera)
+            
+            cmds.setKeyframe(camera, attribute="translateX", t=current_frame, value=update_x)
+            cmds.setKeyframe(camera, attribute="translateY", t=current_frame, value=update_y)
+            cmds.setKeyframe(camera, attribute="translateZ", t=current_frame, value=update_z)
     
     # Apply camera shake by setting keyframes on each camera over every frame
     def apply_values(self):
+        frame_range = self.keyframe_range_slider.value()
         for camera in self.selected_cameras:
             for frame in range(self.num_frames):
                 cmds.currentTime(frame, edit=True)
                 update_x, update_y, update_z = self.update_coordinates(camera)
 
-                if frame % 2 == 0:
+                if frame % frame_range == 0:
                     cmds.setKeyframe(camera, attribute="translateX", t=frame, value=update_x)
                     cmds.setKeyframe(camera, attribute="translateY", t=frame, value=update_y)
                     cmds.setKeyframe(camera, attribute="translateZ", t=frame, value=update_z)
