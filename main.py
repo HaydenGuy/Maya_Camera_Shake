@@ -17,10 +17,11 @@ class CameraShake(QMainWindow):
         self.value_y = self.frequency_y_slider.value()
         self.value_z = self.frequency_z_slider.value()
 
-        # Connect slider value change signals to the freq_slider_values_updated function
+        # Connect slider value change signals to their respective functions
         self.frequency_x_slider.valueChanged.connect(self.freq_slider_values_updated)
         self.frequency_y_slider.valueChanged.connect(self.freq_slider_values_updated)
         self.frequency_z_slider.valueChanged.connect(self.freq_slider_values_updated)
+        self.keyframe_range_slider.valueChanged.connect(self.frame_range_slider_value_updated)
 
         # Connect button click signals to the apply/reset_values functions
         self.set_keyframe.clicked.connect(self.apply_values)
@@ -50,14 +51,14 @@ class CameraShake(QMainWindow):
         lb_frequency_y = QLabel("Frequency Y: ")
         lb_frequency_z = QLabel("Frequency Z: ")
         lb_amplitude = QLabel("Amplitude: ")
-        lb_keyframe_range = QLabel("Every Frame: ")
+        self.lb_keyframe_range = QLabel("Frame Range (1's): ")
 
         # Add labels to the label layout
         lb_layout.addWidget(lb_frequency_x)
         lb_layout.addWidget(lb_frequency_y)
         lb_layout.addWidget(lb_frequency_z)
         lb_layout.addWidget(lb_amplitude)
-        lb_layout.addWidget(lb_keyframe_range)
+        lb_layout.addWidget(self.lb_keyframe_range)
 
         # Create slider layout and horizontal sliders
         slider_layout = QVBoxLayout()
@@ -72,17 +73,19 @@ class CameraShake(QMainWindow):
         self.frequency_y_slider.setRange(0, 10)
         self.frequency_z_slider.setRange(0, 10)
         self.amplitude_slider.setRange(1, 10)
+        self.keyframe_range_slider.setRange(1, 3)
 
         # Add the sliders to the slider layout
         slider_layout.addWidget(self.frequency_x_slider)
         slider_layout.addWidget(self.frequency_y_slider)
         slider_layout.addWidget(self.frequency_z_slider)
         slider_layout.addWidget(self.amplitude_slider)
+        slider_layout.addWidget(self.keyframe_range_slider)
 
         # Create a button layout and buttons
         button_layout = QHBoxLayout()
         self.set_keyframe = QPushButton("Set Keyframe")
-        self.set_keyframe_range = QPushButton("Set Keyframe To Range")
+        self.set_keyframe_range = QPushButton("Set Keyframes To Range")
         self.reset_button = QPushButton("Reset")
 
         # Add the buttons to the button layout
@@ -125,6 +128,11 @@ class CameraShake(QMainWindow):
         self.value_x = self.frequency_x_slider.value() / 500
         self.value_y = self.frequency_y_slider.value() / 500
         self.value_z = self.frequency_z_slider.value() / 500
+
+    # Changes the QLabel for the frame range slider when the slider value is changed
+    def frame_range_slider_value_updated(self):
+        value = self.keyframe_range_slider.value()
+        self.lb_keyframe_range.setText(f"Frame Range ({value}'s): ")
 
     # Returns the current translation values of the selected camera as a tuple
     def get_current_translate_values(self, camera):
