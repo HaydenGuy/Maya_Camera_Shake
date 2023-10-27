@@ -160,6 +160,8 @@ class CameraShake(QMainWindow):
 
     # Apply camera shake to the current keyframe
     def set_keyframe(self):
+        self.selected_cameras = self.get_selected_cameras()
+
         for camera in self.selected_cameras:
             current_frame = cmds.currentTime(query=True)
             update_x, update_y, update_z = self.update_coordinates(camera)
@@ -170,6 +172,8 @@ class CameraShake(QMainWindow):
     
     # Apply camera shake by setting keyframes on each camera over a frame range
     def set_keyframe_to_range(self):
+        self.selected_cameras = self.get_selected_cameras()
+
         frame_range = self.keyframe_range_slider.value()
         for camera in self.selected_cameras:
             for frame in range(1, self.num_frames, frame_range):
